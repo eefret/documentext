@@ -1,3 +1,12 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">DocumenText</string>
+    <string name="error_state">Error</string>
+    <string name="yes">Yes</string>
+    <string name="error_state_text">Error state</string>
+    <string name="messagelist_sender_self">Me</string>
+    <string name="no_subject_view">(No subject)</string>
+    <string name="message_count_format">\u00a0<xliff:g id="number" example="1">%1$s</xliff:g></string>
+    <string name="draft_separator">,\u0020</string>
+    <string name="has_draft">Draft</string>
+
 </resources>

@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 
 def AAVersion = '4.0.0'
+def ASupportVersion = '23.3.0'
 
 android {
     compileSdkVersion 23
@@ -24,11 +25,22 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile "com.android.support:appcompat-v7:$ASupportVersion"
+    compile "com.android.support:support-v13:$ASupportVersion"
+    compile "com.android.support:recyclerview-v7:$ASupportVersion"
+
+    compile 'com.j256.ormlite:ormlite-core:4.48'
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'com.github.ParkSangGwon:TedPermission:v1.0.9'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.googlecode.libphonenumber:libphonenumber:7.3.2'
 
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
+    apt "org.androidannotations:ormlite:$AAVersion"
+    compile "org.androidannotations:ormlite-api:$AAVersion"
 }
 
 apt {

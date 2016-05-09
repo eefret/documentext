@@ -2,26 +2,53 @@ package com.okorana.documentext.activities.fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.Telephony;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.okorana.documentext.R;
+import com.okorana.documentext.data.Conversation;
+import com.okorana.documentext.data.helper.DocumenTextDbHelper;
+import com.okorana.documentext.ui.adapter.ConversationListAdapter;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+import org.androidannotations.ormlite.annotations.OrmLiteDao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by eefret on 5/3/16.
  */
-public class ConversationListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
+@EFragment(R.layout.fragment_conversation_list)
+public class ConversationListFragment extends Fragment{
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public static final String TAG = "ConversationListFragment__";
 
-    }
+    @ViewById RecyclerView recycler;
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    @OrmLiteDao(helper = DocumenTextDbHelper.class)
+    Dao<Conversation,Integer> conversationDao;
 
+    @Bean
+    ConversationListAdapter adapter;
+
+    RecyclerView.LayoutManager layoutManager;
+
+    @AfterViews
+    void bindAdapter(){
+        recycler.setAdapter(adapter);
+        layoutManager = new LinearLayoutManager(getContext());
+        recycler.setLayoutManager(layoutManager);
     }
 }
