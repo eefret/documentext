@@ -1,6 +1,8 @@
 package com.okorana.documentext.ui.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.okorana.documentext.data.Conversation;
@@ -28,6 +30,8 @@ public class ConversationListAdapter extends RecyclerViewAdapterBase<Conversatio
     @Bean(DbConversationFinder.class)
     DbConversationFinder dbConversationFinder;
 
+    View.OnClickListener onItemClickListener;
+
     @AfterInject
     @Background
     void initAdapter(){
@@ -50,5 +54,9 @@ public class ConversationListAdapter extends RecyclerViewAdapterBase<Conversatio
         ConversationItemView view = holder.getView();
         Conversation conversation = items.get(position);
         view.bind(conversation);
+    }
+
+    public void setOnItemClickListener(View.OnClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 }

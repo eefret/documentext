@@ -23,6 +23,9 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.okorana.documentext.R;
+
 /**
  * @hide
  */
@@ -39,7 +42,7 @@ public final class SqliteWrapper {
     }
     public static void checkSQLiteException(Context context, SQLiteException e) {
         if (isLowMemory(e)) {
-            Toast.makeText(context, com.android.internal.R.string.low_memory,
+            Toast.makeText(context, R.string.low_memory,
                     Toast.LENGTH_SHORT).show();
         } else {
             throw e;

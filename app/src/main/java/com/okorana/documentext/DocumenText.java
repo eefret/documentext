@@ -27,6 +27,7 @@ import android.util.Log;
 import com.okorana.documentext.phonebookdata.Contact;
 import com.okorana.documentext.phonebookdata.Conversation;
 import com.okorana.documentext.phonebookdata.LogTag;
+import com.okorana.documentext.phonebookdata.RecipientIdCache;
 
 import java.util.Locale;
 
@@ -58,6 +59,7 @@ public class DocumenText extends Application {
         Context context = getApplicationContext();
         Contact.init(this);
         Conversation.init(this);
+        Contact.init(this);
 
     }
 

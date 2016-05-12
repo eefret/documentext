@@ -19,6 +19,7 @@ import com.okorana.documentext.activities.fragments.ConversationListFragment_;
 import com.okorana.documentext.data.Conversation;
 import com.okorana.documentext.data.Message;
 import com.okorana.documentext.data.helper.DocumenTextDbHelper;
+import com.okorana.documentext.phonebookdata.ContactList;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -88,10 +89,14 @@ public class MainActivity extends AppCompatActivity {
         if (c == null) {
             return;
         }
-        ArrayList<Conversation> conversations = (ArrayList<Conversation>) Conversation.getListFromCursor(this, c);
-        for (Conversation conversation : conversations) {
+        while(c.moveToNext()){
+            com.okorana.documentext.phonebookdata.Conversation conversation = com.okorana.documentext.phonebookdata.Conversation.get(
+                    MainActivity.this,c.getLong(c.getColumnIndex(Conversation._ID)),true);
+            Conversation conv = Conversation.getFromPhoneBookConversation(conversation);
             try {
-                convesationDao.createOrUpdate(conversation);
+                conv.conversationName = ContactList.getByIds(
+                        c.getString(c.getColumnIndex(Conversation.RECIPIENT_IDS)), true).formatNames(",");
+                convesationDao.createOrUpdate(conv);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -113,5 +118,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         c.close();
+    }
+
+    public void onConversationClicked(Conversation conversation){
+        //TODO
     }
 }

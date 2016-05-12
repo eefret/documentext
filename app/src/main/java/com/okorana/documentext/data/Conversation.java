@@ -26,6 +26,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.support.DatabaseResults;
 import com.j256.ormlite.table.ObjectFactory;
+import com.okorana.documentext.phonebookdata.ContactList;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -60,88 +61,37 @@ public class Conversation {
     @DatabaseField private int message_count;
     @DatabaseField private String recipient_ids;
     @DatabaseField private String snippet;
-    @DatabaseField private int snippet_cs;
     @DatabaseField private int read;
-    @DatabaseField private int archived;
-    @DatabaseField private int type;
     @DatabaseField private int error;
     @DatabaseField private int has_attachment;
-    @DatabaseField private int unread_message_count;
-    @DatabaseField private String conversationName;
+    @DatabaseField public String conversationName;
 
     Conversation() {
         //Needed by ormlite
     }
 
-    private Conversation(long _id, int date, int message_count, String recipient_ids,
-                         String snippet, int snippet_cs, int read, int archived,
-                         int type, int error, int has_attachment, int unread_message_count,
-                         String conversationName) {
+    private Conversation(long _id, long date, int message_count, String recipient_ids,
+                         String snippet, int read, int error,
+                         int has_attachment) {
         this._id = _id;
         this.date = date;
         this.message_count = message_count;
         this.recipient_ids = recipient_ids;
         this.snippet = snippet;
-        this.snippet_cs = snippet_cs;
         this.read = read;
-        this.archived = archived;
-        this.type = type;
         this.error = error;
         this.has_attachment = has_attachment;
-        this.unread_message_count = unread_message_count;
         this.conversationName = conversationName;
     }
 
-    public static Conversation getFromCursor(Cursor c, String conversationName) {
-        return new Conversation(
-                c.getLong(c.getColumnIndex(_ID)),
-                c.getInt(c.getColumnIndex(DATE)),
-                c.getInt(c.getColumnIndex(MESSAGE_COUNT)),
-                c.getString(c.getColumnIndex(RECIPIENT_IDS)),
-                c.getString(c.getColumnIndex(SNIPPET)),
-                c.getInt(c.getColumnIndex(SNIPPET_CS)),
-                c.getInt(c.getColumnIndex(READ)),
-                c.getInt(c.getColumnIndex(ARCHIVED)),
-                c.getInt(c.getColumnIndex(TYPE)),
-                c.getInt(c.getColumnIndex(ERROR)),
-                c.getInt(c.getColumnIndex(HAS_ATTACHMENT)),
-                c.getInt(c.getColumnIndex(UNREAD_MESSAGE_COUNT)),
-                conversationName);
-    }
-
     public static Conversation getFromPhoneBookConversation(com.okorana.documentext.phonebookdata.Conversation conversation){
-        Conversation conv = new Conversation();
-        conv.recipient_ids = conversation.
-    }
-
-    public static List<Conversation> getListFromCursor(Context ctx, Cursor c) {
-        ArrayList<Conversation> conversations = new ArrayList<>(c.getCount());
-        c.moveToFirst();
-        try {
-            while (c.moveToNext()) {
-                Cursor cursor = ctx.getContentResolver().query(
-                        Uri.parse("content://sms/inbox"),
-                        new String[]{"_id", "thread_id", "address"},
-                        "thread_id = ?", new String[]{String.valueOf(c.getInt(c.getColumnIndex(_ID)))},
-                        null);
-                String conversationName = "";
-                if(cursor!= null && cursor.getCount()>0){
-                    cursor.moveToFirst();
-                    conversationName = cursor.getString(2);
-                    cursor.close();
-                }
-                Conversation conversation = Conversation.getFromCursor(c, conversationName);
-                ArrayList<Contact> contacts = (ArrayList<Contact>) conversation.getContactList(ctx);
-                if (contacts.size()==1 && contacts.get(0).getDisplay_name()!= null
-                        && !contacts.get(0).getDisplay_name().isEmpty()){
-                    conversation.conversationName = conversation.getContactList(ctx).get(0).getDisplay_name();
-                }
-                conversations.add(conversation);
-            }
-        } finally {
-            c.close();
-        }
-        return conversations;
+        return new Conversation(conversation.getThreadId(),
+                conversation.getDate(),
+                conversation.getMessageCount(),
+                conversation.getRecipients().formatNames(" "),
+                conversation.getSnippet(),
+                conversation.hasUnreadMessages()?0:1,conversation.hasError()?1:0,
+                conversation.hasAttachment()?1:0);
     }
 
     public ArrayList<Integer> getRecipients() {
@@ -186,20 +136,8 @@ public class Conversation {
         return snippet;
     }
 
-    public int getSnippet_cs() {
-        return snippet_cs;
-    }
-
     public int getRead() {
         return read;
-    }
-
-    public int getArchived() {
-        return archived;
-    }
-
-    public int getType() {
-        return type;
     }
 
     public int getError() {
@@ -208,13 +146,5 @@ public class Conversation {
 
     public int getHas_attachment() {
         return has_attachment;
-    }
-
-    public int getUnread_message_count() {
-        return unread_message_count;
-    }
-
-    public String getConversationName() {
-        return conversationName;
     }
 }

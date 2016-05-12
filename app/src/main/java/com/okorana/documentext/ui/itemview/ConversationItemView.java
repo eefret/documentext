@@ -91,7 +91,7 @@ public class ConversationItemView extends LinearLayout {
         mphoneBookConversation = com.okorana.documentext.phonebookdata.Conversation.get(context, conversation.get_id(), true);
         date.setText(Utils.formatTimeStampString(context, conversation.getDate(), false));
         updateAvatarView();
-        name.setText(formatMessage());
+        name.setText(conversation.conversationName);
         snippet.setText(mphoneBookConversation.getSnippet());
     }
 
