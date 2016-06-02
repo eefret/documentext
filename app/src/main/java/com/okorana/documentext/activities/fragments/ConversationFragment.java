@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.okorana.documentext.R;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -16,5 +17,10 @@ public class ConversationFragment extends Fragment{
     public static final String TAG = "ConversationFragment__";
 
     @ViewById RecyclerView recycler;
+
+    @AfterViews
+    void bindAdapter(){
+        recycler.setAdapter();
+    }
 
 }
